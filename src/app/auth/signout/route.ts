@@ -1,12 +1,10 @@
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
 
 export async function POST() {
-  const supabase = createRouteHandlerClient({ cookies });
-  await supabase.auth.signOut();
+  const supabase = await createClient()
 
-  return NextResponse.redirect(new URL("/admin/login", process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"), {
-    status: 302,
-  });
+  await supabase.auth.signOut()
+
+  redirect('/admin/login')
 }
